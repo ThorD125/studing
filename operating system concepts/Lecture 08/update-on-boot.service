@@ -1,0 +1,10 @@
+[Unit]
+Description=Keeping my sources minty fresh
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/bin/bash /root/update-on-boot.sh
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

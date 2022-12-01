@@ -1,0 +1,11 @@
+[Unit]
+Description=Dumb chat service
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=/usr/bin/env php %h/chatbot.php
+[Install]
+WantedBy=multi-user.target

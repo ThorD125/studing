@@ -1,0 +1,10 @@
+[Unit]
+Description=Log uptime in scoreboard
+DefaultDependencies=no
+Before=shutdown.target
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash %h/keep-uptime.sh
+TimeoutStartSec=0
+[Install]
+WantedBy=shutdown.target
