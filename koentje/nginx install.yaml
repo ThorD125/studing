@@ -1,0 +1,28 @@
+---
+- name: Setup Nginx website
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Create Nginx configuration file
+      template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/sites-enabled/default
+      notify:
+        - restart nginx
+
+    - name: Clone GitHub repository
+      git:
+        repo: https://github.com/user/repo.git
+        dest: /var/www/html
+      register: git_output
+
+handlers:
+  - name: restart nginx
+    service:
+      name: nginx
+      state: restarted

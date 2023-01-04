@@ -1,0 +1,6 @@
+
+INSERT INTO users(username, password) VALUES('john', 'helloworld');
+SELECT * FROM users WHERE username = 'john';
+
+INSERT INTO reviews(username, movie_id, review, score) VALUES('john', 1, 'Love this movie!', 7);
+

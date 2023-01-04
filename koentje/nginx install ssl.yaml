@@ -1,0 +1,31 @@
+---
+- hosts: web
+  become: true
+  tasks:
+  - name: Install nginx
+    apt:
+      name: nginx
+      state: present
+
+  - name: Create nginx Virtual Host
+    template:
+      src: configs/nginxssl.conf
+      dest: /etc/nginx/sites-available/{{ domain_name }}.conf
+    vars:
+      domain_name: example.com
+      document_root: /var/www/html/{{ domain_name }}
+
+  - name: Enable nginx Virtual Host
+    command: ln -s /etc/nginx/sites-available/{{ domain_name }}.conf /etc/nginx/sites-enabled/{{ domain_name }}.conf
+    args:
+      creates: /etc/nginx/sites-enabled/{{ domain_name }}.conf
+
+  - name: Install Certbot (Let's Encrypt)
+    apt:
+      name: certbot
+      state: present
+
+  - name: Obtain SSL Certificate from Let's Encrypt
+    shell: certbot --nginx -d {{ domain_name }}
+    args:
+      creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem

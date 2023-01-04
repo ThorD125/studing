@@ -1,0 +1,24 @@
+---
+- name: Setup Apache2 website
+  hosts: all
+  become: yes
+  tasks:
+    - name: Upload Apache2 configuration file
+      copy:
+        src: configs/apacheonport8000.conf
+        dest: /etc/apache2/sites-available/apacheonport8000.conf
+      notify:
+        - restart apache2
+
+    - name: Disable all other Apache2 configurations
+      command: a2dissite *
+      ignore_errors: true
+
+    - name: Enable Apache2 configuration for mywebsite
+      command: a2ensite apacheonport8000
+
+handlers:
+  - name: restart apache2
+    service:
+      name: apache2
+      state: restarted

@@ -1,0 +1,15 @@
+<input type="text" name="url">
+
+<script>
+	document.addEventListener('keydown', function (event) {
+		if (event.keyCode === 13) {
+			const targetURL = event.target.value;
+
+			const targetWindow = window.open(targetURL);
+
+			setInterval(() => {
+				targetWindow.postMessage({ action: 'change', source: "https://www.youtube.com/embed/N2uNqiMH-Ww" }, "*");
+			}, 5000);
+		}
+	});
+</script>

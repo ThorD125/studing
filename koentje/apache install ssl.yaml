@@ -1,0 +1,30 @@
+---
+- hosts: web
+  become: true
+  tasks:
+  - name: Install Apache2
+    apt:
+      name: apache2
+      state: present
+
+  - name: Create Apache2 Virtual Host
+    template:
+      src: configs/apachessl.conf
+      dest: /etc/apache2/sites-available/{{ domain_name }}.conf
+    vars:
+      domain_name: example.com
+      document_root: /var/www/html/{{ domain_name }}
+
+  - name: Enable Apache2 Virtual Host
+    a2ensite:
+      name: {{ domain_name }}.conf
+
+  - name: Install Certbot (Let's Encrypt)
+    apt:
+      name: certbot
+      state: present
+
+  - name: Obtain SSL Certificate from Let's Encrypt
+    shell: certbot --apache -d {{ domain_name }}
+    args:
+      creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
