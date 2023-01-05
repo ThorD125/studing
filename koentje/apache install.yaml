@@ -1,10 +1,13 @@
 ---
 - name: Set up Apache2 website
   hosts: all
+  become: true
   tasks:
   - name: Install Apache2
     apt:
-      name: apache2
+      name: 
+      - git
+      - apache2
       state: present
   - name: Start Apache2 service
     service:
@@ -14,7 +17,11 @@
     service:
       name: apache2
       enabled: true
+  - name: Remove /var/www/html folder
+    file:
+      path: /var/www/html
+      state: absent
   - name: Clone GitHub repository
     git:
-      repo: https://github.com/USERNAME/REPO_NAME.git
+      repo: https://github.com/ThorD125/site.git
       dest: /var/www/html
