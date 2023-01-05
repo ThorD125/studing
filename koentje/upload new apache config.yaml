@@ -7,8 +7,7 @@
       copy:
         src: configs/apacheonport8000.conf
         dest: /etc/apache2/sites-available/apacheonport8000.conf
-      notify:
-        - restart apache2
+
 
     - name: Disable all other Apache2 configurations
       command: a2dissite *
@@ -16,9 +15,16 @@
 
     - name: Enable Apache2 configuration for mywebsite
       command: a2ensite apacheonport8000
-
-handlers:
-  - name: restart apache2
-    service:
-      name: apache2
-      state: restarted
+    - name: Remove /etc/apache2/ports.conf
+      file:
+        path: /etc/apache2/ports.conf
+        state: absent
+    - name: Add a line to a file if the file does not exist, without passing regexp
+      ansible.builtin.lineinfile:
+        path: /etc/apache2/ports.conf
+        line: Listen 1234
+        create: yes
+    - name: restart apache2
+      service:
+        name: apache2
+        state: reloaded

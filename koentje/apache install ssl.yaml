@@ -1,6 +1,9 @@
 ---
-- hosts: web
+- hosts: all
   become: true
+  vars:
+    domain_name: example.com
+    document_root: /var/www/html/{{ domain_name }}
   tasks:
   - name: Install Apache2
     apt:
@@ -9,22 +12,23 @@
 
   - name: Create Apache2 Virtual Host
     template:
-      src: configs/apachessl.conf
+      src: configs/apachessl.conf.j2
       dest: /etc/apache2/sites-available/{{ domain_name }}.conf
-    vars:
-      domain_name: example.com
-      document_root: /var/www/html/{{ domain_name }}
 
   - name: Enable Apache2 Virtual Host
-    a2ensite:
-      name: {{ domain_name }}.conf
+    ansible.builtin.shell: "cd /etc/apache2/sites-available && a2ensite {{ domain_name }}.conf"
 
-  - name: Install Certbot (Let's Encrypt)
-    apt:
-      name: certbot
-      state: present
+- openssl_privatekey:
+    path: /etc/ssl/localcerts/{{ domain_name }}.key
+    size: 2048 
 
-  - name: Obtain SSL Certificate from Let's Encrypt
-    shell: certbot --apache -d {{ domain_name }}
-    args:
-      creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
+- openssl_csr:
+    path: /etc/ssl/localcerts/{{ domain_name }}.csr
+    privatekey_path: /etc/ssl/localcerts/{{ domain_name }}.key
+
+- openssl_certificate:
+    provider: selfsigned
+    path: /etc/ssl/localcerts/{{ domain_name }}.crt
+    privatekey_path: /etc/ssl/localcerts/{{ domain_name }}.key
+    csr_path: /etc/ssl/localcerts/{{ domain_name }}.csr
+ 
