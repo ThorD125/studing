@@ -2,27 +2,34 @@
 - name: Setup Nginx website
   hosts: all
   become: yes
+  vars:
+    domain_name: example.com
+    document_root: /var/www/html
   tasks:
     - name: Install Nginx
       apt:
-        name: nginx
+        name: 
+        - nginx
+        - git
         state: present
 
     - name: Create Nginx configuration file
       template:
-        src: templates/nginx.conf.j2
+        src: configs/nginx.conf.j2
         dest: /etc/nginx/sites-enabled/default
-      notify:
-        - restart nginx
 
+    - name: Remove /var/www/html folder
+      file:
+        path: /var/www/html
+        state: absent
+        
     - name: Clone GitHub repository
       git:
-        repo: https://github.com/user/repo.git
+        repo: https://github.com/ThorD125/site
         dest: /var/www/html
       register: git_output
 
-handlers:
-  - name: restart nginx
-    service:
-      name: nginx
-      state: restarted
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted

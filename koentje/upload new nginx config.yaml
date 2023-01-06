@@ -3,21 +3,37 @@
   hosts: all
   become: yes
   tasks:
+    - name: Remove /etc/nginx/sites-enabled folder
+      file:
+        path: /etc/nginx/sites-enabled
+        state: absent
+    - name: Create folder /etc/nginx/sites-enabled folder
+      file:
+        path: /etc/nginx/sites-enabled
+        state: directory
+        
+    - name: Remove /etc/nginx/sites-available folder
+      file:
+        path: /etc/nginx/sites-available
+        state: absent
+    - name: Create folder /etc/nginx/sites-available folder
+      file:
+        path: /etc/nginx/sites-available
+        state: directory
+
     - name: Upload Nginx configuration file
       copy:
-        src: files/mywebsite.conf
+        src: configs/nginxonport8000.conf
         dest: /etc/nginx/sites-available/mywebsite.conf
-      notify:
-        - restart nginx
 
-    - name: Disable all other Nginx configurations
-      command: rm -f /etc/nginx/sites-enabled/*
+    - name: Creating a symlink
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/mywebsite.conf
+        dest: /etc/nginx/sites-enabled/mywebsite.conf
+        state: link
+        force: yes
 
-    - name: Enable Nginx configuration for mywebsite
-      command: ln -s /etc/nginx/sites-available/mywebsite /etc/nginx/sites-enabled/
-
-handlers:
-  - name: restart nginx
-    service:
-      name: nginx
-      state: restarted
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
