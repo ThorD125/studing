@@ -1,0 +1,35 @@
+---
+- name: Install and configure Filebeat
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Add Elastic repository
+      apt_repository:
+        repo: 'deb https://artifacts.elastic.co/packages/7.x/apt stable main'
+        state: present
+        update_cache: true
+      tags:
+        - filebeat
+
+    - name: Install Filebeat
+      apt:
+        name: filebeat
+        state: present
+      tags:
+        - filebeat
+
+    - name: Configure Filebeat
+      template:
+        src: configs/filebeatconf.yml.j2
+        dest: /etc/filebeat/filebeat.yml
+      tags:
+        - filebeat
+
+    - name: Start Filebeat service
+      service:
+        name: filebeat
+        state: started
+        enabled: true
+      tags:
+        - filebeat
