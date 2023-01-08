@@ -1,0 +1,57 @@
+sudo apt install gnupg
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+sudo apt-get install apt-transport-https
+echo "deb https://artifacts.elastic.co/packages/8.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-8.x.list
+sudo apt-get update
+sudo apt install filebeat
+
+
+
+# sudo vim /etc/filebeat/filebeat.yml
+# # comment out the next section
+# #output.elasticsearch:
+#   # Array of hosts to connect to.
+#   #hosts: ["localhost:9200"]
+
+# # enable the next section
+# output.logstash:
+#   # The Logstash hosts
+#   hosts: ["IP_OF_ELASTIC_STACK:5044"]  
+
+
+
+
+
+
+sudo filebeat modules enable apache
+
+
+sudo vim /etc/filebeat/modules.d/apache.yml
+
+- module: apache
+  # Access logs
+  access:
+    enabled: true
+
+    # Set custom paths for the log files. If left empty,
+    # Filebeat will choose the paths depending on your OS.
+    #var.paths:
+
+  # Error logs
+  error:
+    enabled: true
+
+    # Set custom paths for the log files. If left empty,
+    # Filebeat will choose the paths depending on your OS.
+    #var.paths:
+
+
+
+sudo systemctl enable filebeat
+sudo systemctl start filebeat
+sudo systemctl status filebeat
+
+
+
+
+
