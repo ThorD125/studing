@@ -62,3 +62,11 @@ IncludeOptional /etc/modsecurity/*.conf
 
 add SecRuleEngine On
 in virtual host files
+
+create .conf file
+/etc/modsecurity
+ and add the rules
+SecRule REQUEST_FILENAME “FILENAME.php" "id:'400001',chain,deny,log,msg:’LOGMESSAGE'"
+SecRule REQUEST_METHOD “HTTPMETHOD" chain
+SecRule REQUEST_BODY "@rx (?i:(REGEX ARRAY|WITH|FILTERED|WORDS))
+
