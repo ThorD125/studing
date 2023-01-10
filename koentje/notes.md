@@ -55,5 +55,10 @@ sudo journalctl -xe | grep -i denied
 sudo journalctl -xe -u apache2
 
 
+## modsecurity
 
+sudo nano /etc/apache2/mods-enabled/security2.conf
+IncludeOptional /etc/modsecurity/*.conf
 
+add SecRuleEngine On
+in virtual host files
