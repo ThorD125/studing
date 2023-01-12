@@ -102,3 +102,14 @@ sudo nano /etc/filebeat/modules.d/apache.yml
 sudo systemctl enable filebeat
 sudo systemctl start filebeat
 sudo systemctl status filebeat
+
+### google auth
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+
+<div id="g_id_onload"
+data-client_id="546079847280-boiq4h19f5jt62hdqfegar0l7ln109v5.apps.googleusercontent.com"data-callback="handleCredentialResponse">
+</div>
+
+<div class="g_id_signin" data-type="standard"></div>
