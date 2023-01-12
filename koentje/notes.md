@@ -70,3 +70,35 @@ SecRule REQUEST_FILENAME “FILENAME.php" "id:'400001',chain,deny,log,msg:’LOG
 SecRule REQUEST_METHOD “HTTPMETHOD" chain
 SecRule REQUEST_BODY "@rx (?i:(REGEX ARRAY|WITH|FILTERED|WORDS))
 
+
+
+## arman cheats
+
+### filebeat
+
+sudo apt install gnupg -y
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+sudo apt-get install apt-transport-https
+echo "deb https://artifacts.elastic.co/packages/8.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-8.x.list
+sudo apt-get update -y
+sudo apt install filebeat -y
+sudo nano /etc/filebeat/filebeat.yml
+
+> elk commenten
+en dit erin zette
+`
+    output.logstash:
+        hosts: ["elk:5044"]
+`
+
+sudo filebeat modules enable apache
+
+`
+false > true zette
+`
+
+sudo nano /etc/filebeat/filebeat.yml
+sudo nano /etc/filebeat/modules.d/apache.yml
+sudo systemctl enable filebeat
+sudo systemctl start filebeat
+sudo systemctl status filebeat
